@@ -23,7 +23,7 @@ def bills(request: HttpRequest):
 
 @login_required
 def view_bill(request: HttpRequest, bill_no: int):
-    if not Bill.objects.get(ok=bill_no):
+    if not Bill.objects.get(pk=bill_no):
         return redirect("/")
     bill = Bill.objects.get(pk=bill_no)
     context = {"bill": bill}

@@ -100,7 +100,7 @@ class ServerSoftware(models.Model):
     environment = models.CharField(max_length=1000, blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.game_name} - {self.name}"
 
     def save(self, *args) -> None:
         resp = pterodactyl.get_egg_info(self.ptero_nest_id, self.ptero_egg_id)
@@ -139,6 +139,9 @@ class Server(models.Model):
 
     def save(self, *args):
         if self.server_id is not None:
+            self.server_id_hex = pterodactyl.get_server_info(self.server_id)[
+                "attributes"
+            ]["identifier"]
             return super().save(*args)
         specs = {
             "name": f"{self.customer.name}-{self.plan.name}",

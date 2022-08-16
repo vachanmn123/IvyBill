@@ -37,6 +37,30 @@
     <p>
         <b>Next Bill Due:</b> {{db_server.next_payment_date}}
     </p>
+    <p><b>Server Bills: </b>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Bill Amount</th>
+                <th>Bill Due Date</th>
+                <th>Bill Creation Date</th>
+                <th>Bill Status</th>
+                <th>More Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in db_server.bill_set.all %}
+            <tr>
+                <td>{{ bill.amount }} {{ bill.currency }}</td>
+                <td>{{ bill.due_date }}</td>
+                <td>{{ bill.creation_date }}</td>
+                <td>{{ bill.paid }}</td>
+                <td><a href="{% url 'view_bill' bill.pk %}"><button class="btn btn-info">View Bill</button></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </p>
     <p><a href="{{ ptero_url }}/server/{{ db_server.server_id_hex }}"><button class="btn btn-primary">Panel</button></a>
         <a href="{% url 'index' %}"><button class="btn btn-link">Back to Home</button></a>
     </p>
