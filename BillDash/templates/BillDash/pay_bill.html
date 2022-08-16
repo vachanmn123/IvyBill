@@ -1,0 +1,16 @@
+{% extends 'BillDash/base.html' %}
+
+{% block title %} Pay Bill {{bill.pk}} {% endblock %}
+{% block content %}
+<div>
+    <h1>Paying for bill {{bill.pk}}</h1>
+    <hr>
+    <p><b>Bill Number:</b> {{bill.pk}}</p>
+    <p><b>Bill Name:</b> {{bill}}</p>
+    <p><b>Server:</b> {{bill.server}}</p>
+    <p><b>Bill Amount:</b> {{bill.amount}} {{bill.curency}}</p>
+    <p><b>Bill Geneation Date:</b> {{bill.creation_date}}</p>
+    <p><b>Bill Due Date:</b> {{bill.due_date}}</p>
+    <h2>Online Bill Payment system isn't implemented yet.</h2>
+</div>
+{% endblock %}

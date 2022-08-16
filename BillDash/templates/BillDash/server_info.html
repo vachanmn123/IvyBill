@@ -1,0 +1,44 @@
+{% extends 'BillDash/base.html' %}
+
+{% block title %} Server {{db_server.server_id}} {% endblock %}
+{% block content %}
+<div>
+    <h1>Server {{db_server.server_id}}</h1>
+    <hr>
+    <p><b>Server Name:</b> {{db_server.name}}</p>
+    <p><b>Server Plan:</b> {{db_server.plan}}</p>
+    <p><b>Server Location:</b> {{db_server.plan.location}}</p>
+    <p><b>Server Software:</b> {{db_server.server_software}}</p>
+    <p><b>Server Support Code:</b> {{db_server.server_id_hex}}</p>
+    <p><b>Server Suspension Status:</b> {{ptero_server.attributes.suspended}}</p>
+    <p><b>Server Specs:</b>
+    <ul>
+        <li>CPU: {{ptero_server.attributes.limits.cpu}} %</li>
+        <li>RAM: {{ptero_server.attributes.limits.memory}} MiB</li>
+        <li>Disk: {{ptero_server.attributes.limits.disk}} MiB</li>
+    </ul>
+    </p>
+    <p><b>Server Features:</b>
+    <ul>
+        <li>Databses: {{ptero_server.attributes.feature_limits.databases}}</li>
+        <li>Backups: {{ptero_server.attributes.feature_limits.backups}}</li>
+    </ul>
+    </p>
+    <p><b>Network Allocations:</b> <br>
+    <ul>
+        {% for allocation in ptero_server.attributes.relationships.allocations.data %}
+        <li>{{allocation.attributes.alias}}:{{allocation.attributes.port}}</li>
+        {% endfor %}
+    </ul>
+    </p>
+    <p>
+        <b>Server Creation Date:</b> {{db_server.creation_date}}
+    </p>
+    <p>
+        <b>Next Bill Due:</b> {{db_server.next_payment_date}}
+    </p>
+    <p><a href="{{ ptero_url }}/server/{{ db_server.server_id_hex }}"><button class="btn btn-primary">Panel</button></a>
+        <a href="{% url 'index' %}"><button class="btn btn-link">Back to Home</button></a>
+    </p>
+</div>
+{% endblock %}

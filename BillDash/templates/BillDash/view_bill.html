@@ -1,0 +1,21 @@
+{% extends 'BillDash/base.html' %}
+
+{% block title %} View Bill {{bill.pk}} {% endblock %}
+{% block content %}
+<div>
+    <h1>Bill Info</h1>
+    <hr>
+    <p><b>Bill Number:</b> {{bill.pk}}</p>
+    <p><b>Bill Name:</b> {{bill}}</p>
+    <p><b>Server:</b> {{bill.server}}</p>
+    <p><b>Bill Amount:</b> {{bill.amount}} {{bill.curency}}</p>
+    <p><b>Bill Geneation Date:</b> {{bill.creation_date}}</p>
+    <p><b>Bill Due Date:</b> {{bill.due_date}}</p>
+    {% if bill.paid %}
+    <p><b>Bill Status:</b> <span style="color: 00ff00;">Paid</span></p>
+    {% else %}
+    <p><b>Bill Status:</b> <span style="color: ff0000;">Unpaid</span></p>
+    <p><a href="{% url 'pay_bill' bill.pk %}"><button class="btn btn-success">Pay Now!</button></a></p>
+    {% endif %}
+</div>
+{% endblock %}

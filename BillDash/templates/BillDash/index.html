@@ -2,44 +2,34 @@
 
 {% block title %} Home {% endblock %}
 {% block content %}
-<div class="container" align="center">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>IvyBill Client Dashboard</h1>
-            <small>Here, you can find details about your servers and payments.</small>
-        </div>
-    </div>
-    <div class="row">
-        <p>Name: {{user.first_name}} {{user.last_name}}</p>
-        <p>Email: {{user.email}}</p>
-    </div>
-    <div class="row">
-        <table>
-            <thead>
-                <tr>
-                    <th>Server Support Code</th>
-                    <th>Server Creation Date</th>
-                    <th>Server Plan</th>
-                    <th>Server RAM</th>
-                    <th>Server CPU</th>
-                    <th>Server Storage</th>
-                    <th>Next Payment Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for server in user.customer.server_set.all %}
-                <tr>
-                    <td>{{server.server_id_hex}}</td>
-                    <td>{{server.creation_date}}</td>
-                    <td>{{server.plan.name}}</td>
-                    <td>{{server.ram}}</td>
-                    <td>{{server.cpu}}</td>
-                    <td>{{server.disk}}</td>
-                    <td>{{server.next_payment_date}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div>
+    <h1>Home</h1>
+    <hr>
+    <h2>Your Servers</h2>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Server Name</th>
+                <th>Server Plan</th>
+                <th>Server Software</th>
+                <th>Panel link</th>
+                <th>Manage Server</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for server in user.customer.server_set.all %}
+            <tr>
+                <td>{{ server.name }}</td>
+                <td>{{ server.plan }}</td>
+                <td>{{ server.server_software }}</td>
+                <td><a href="{{ ptero_url }}/server/{{ server.server_id_hex }}"><button
+                            class="btn btn-primary">Panel</button></a></td>
+                <td><a href="{% url 'server_info' server.server_id %}"><button class="btn btn-info">More
+                            Info</button></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

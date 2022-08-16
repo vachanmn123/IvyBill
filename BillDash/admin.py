@@ -1,10 +1,10 @@
 from dataclasses import fields
 from django.contrib import admin
 
-from .models import Customer, Server, Plan, Payment, Location, ServerSoftware
+from .models import Customer, Server, Plan, Bill, Location, ServerSoftware
 
 # Register your models here.
-admin.site.register(Payment)
+admin.site.register(Bill)
 admin.site.site_header = "IvyBill Admin"
 
 

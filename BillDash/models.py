@@ -47,13 +47,23 @@ class Customer(models.Model):
         return print("Error deleting customer")
 
 
-class Payment(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+class Bill(models.Model):
+    bill_number = models.AutoField(primary_key=True)
+    server = models.ForeignKey("Server", on_delete=models.SET_NULL, null=True)
     currency = models.CharField(max_length=3)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     creation_date = models.DateTimeField(auto_now_add=True)
     due_date = models.DateTimeField()
     paid = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.server.customer} - {self.due_date.isoformat()}"
+
+    def save(self, *args) -> None:
+        if self.amount > 0:
+            return super().save(*args)
+        self.amount = self.server.plan.price
+        return super().save(*args)
 
 
 class Location(models.Model):
@@ -114,15 +124,18 @@ class Server(models.Model):
     creation_date = models.TimeField(auto_now=True)
     plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
     next_payment_date = models.DateTimeField(null=True, blank=True)
-    last_payment = models.OneToOneField(
-        Payment, null=True, blank=True, on_delete=models.PROTECT, default=None
-    )
     server_software = models.ForeignKey(
         ServerSoftware, on_delete=models.PROTECT, default=None
     )
 
     def __str__(self):
         return self.server_id_hex
+
+    def name(self):
+        res = pterodactyl.get_server_info(self.server_id)
+        if not res:
+            return "Error getting server info"
+        return res["attributes"]["name"]
 
     def save(self, *args):
         if self.server_id is not None:

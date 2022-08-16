@@ -13,8 +13,10 @@ class Pterodactyl:
         }
 
     def get_server_info(self, server_id: int) -> dict:
-        url = f"{self.api_endpoint}/api/application/server/{server_id}"
+        url = f"{self.api_endpoint}/api/application/servers/{server_id}?include=allocations"
         response = requests.get(url, headers=self.headers)
+        if response.status_code != 200:
+            return None
         return response.json()
 
     def create_new_user(

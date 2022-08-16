@@ -1,0 +1,40 @@
+{% extends 'BillDash/base.html' %}
+
+{% block title %} Bills {% endblock %}
+{% block content %}
+<div>
+    <h1>Bills</h1>
+    <hr>
+    <h2>Your Bills</h2>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Bill Amount</th>
+                <th>Bill Due Date</th>
+                <th>Bill Creation Date</th>
+                <th>Bill Status</th>
+                <th>More Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for server in user.customer.server_set.all %}
+            <div>
+                <tr>
+                    <td colspan=4 scope="colgroup">Server: {{ server.name }}</td>
+                </tr>
+                {% for bill in server.bill_set.all %}
+                <tr>
+                    <td>{{ bill.amount }} {{ bill.currency }}</td>
+                    <td>{{ bill.due_date }}</td>
+                    <td>{{ bill.creation_date }}</td>
+                    <td>{{ bill.paid }}</td>
+                    <td><a href="{% url 'view_bill' bill.pk %}"><button class="btn btn-info">View Bill</button></a></td>
+                </tr>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

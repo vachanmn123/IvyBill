@@ -9,9 +9,35 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
-        {%block content%}
-            <p>How even did you end up here?!</p>
-        {%endblock%}
+        <div class="containter" align="center">
+            <div class="row">
+                <div class="col-md-3">
+                    <h1>IvyBill</h1>
+                    <hr>
+                    {% if user %}
+                        <small>Logged in as:</small>
+                        <h4>Name: {{ user.first_name }} {{ user.last_name }}</h2>
+                        <h4>Email: {{ user.email }}</h4>
+                        <a href="{% url 'logout' %}"><button class="btn btn-danger">Logout</button></a>
+                    {% else %}
+                        <small>Not logged in</small>
+                        <h2><a href="{% url 'login' %}">Login</a></h2>
+                    {% endif %}
+                    <hr>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                    </ul>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="{% url 'bills' %}">Bills</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-9">
+                    {%block content%}
+                        <p>How even did you end up here?!</p>
+                    {%endblock%}
+                </div>
+            </div>
+        </div>
         <footer>
             <div class="container" align="center">
                 <div class="row">
