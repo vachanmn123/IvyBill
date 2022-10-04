@@ -90,3 +90,17 @@ class Pterodactyl:
         if resp.status_code == 204:
             return True
         return False
+
+    def suspend_server(self, server_id: int) -> bool:
+        url = f"{self.api_endpoint}/api/application/servers/{server_id}/suspend"
+        resp = requests.post(url, headers=self.headers)
+        if resp.status_code == 204:
+            return True
+        return False
+
+    def unsuspend_server(self, server_id: int) -> bool:
+        url = f"{self.api_endpoint}/api/application/servers/{server_id}/unsuspend"
+        resp = requests.post(url, headers=self.headers)
+        if resp.status_code == 204:
+            return True
+        return False

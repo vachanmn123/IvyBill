@@ -26,8 +26,6 @@ SECRET_KEY = "django-insecure-ezssu7fl)bs*y^$0prtj*yu_f_)7jp)iux1_m-xp(zcdogspmr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ddec-122-167-54-134.in.ngrok.io"]
-
 
 # Application definition
 
@@ -126,4 +124,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "/"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-CSRF_TRUSTED_ORIGINS = ["https://ddec-122-167-54-134.in.ngrok.io"]

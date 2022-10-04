@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from .pterodactyl import Pterodactyl
 import json
+from . import notify
+from django.utils import timezone
 
 from BillDash import pterodactyl
 
@@ -60,9 +62,14 @@ class Bill(models.Model):
         return f"{self.server.customer} - {self.due_date.isoformat()}"
 
     def save(self, *args) -> None:
+        if (not self._state.adding) and self.paid:
+            self.server.next_payment_date += timezone.timedelta(days=30)
+            return super().save(*args)
         if self.amount > 0:
+            notify.new_bill(self)
             return super().save(*args)
         self.amount = self.server.plan.price
+        notify.new_bill(self)
         return super().save(*args)
 
 
@@ -127,6 +134,7 @@ class Server(models.Model):
     server_software = models.ForeignKey(
         ServerSoftware, on_delete=models.PROTECT, default=None
     )
+    suspended = models.BooleanField(default=False)
 
     def __str__(self):
         return self.server_id_hex
@@ -138,6 +146,14 @@ class Server(models.Model):
         return res["attributes"]["name"]
 
     def save(self, *args):
+        if not self._state.adding:
+            if not self.suspended:
+                notify.unsuspend_server(self)
+                pterodactyl.unsuspend_server(self.server_id)
+            if self.suspended:
+                notify.suspend_server(self)
+                pterodactyl.suspend_server(self.server_id)
+            return super().save(*args)
         if self.server_id is not None:
             self.server_id_hex = pterodactyl.get_server_info(self.server_id)[
                 "attributes"
@@ -183,8 +199,10 @@ class Server(models.Model):
             return print("Error creating server")
         self.server_id = res["attributes"]["id"]
         self.server_id_hex = res["attributes"]["identifier"]
+        notify.new_server(self)
         return super().save(*args)
 
     def delete(self, *args):
         pterodactyl.delete_server(self.server_id)
+        notify.delete_server(self)
         return super().delete(*args)
