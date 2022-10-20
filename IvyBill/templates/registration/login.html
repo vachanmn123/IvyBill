@@ -1,29 +1,37 @@
+{% extends 'registration/base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %} 
 {% if form.errors %}
+<div class="alert alert-danger">
 <p>Your username and password didn't match. Please try again.</p>
+</div>
 {% endif %} {% if next %} {% if user.is_authenticated %}
+<div class="alert alert-danger">
 <p>
   Your account doesn't have access to this page. To proceed, please login with
   an account that has access.
 </p>
+</div>
 {% else %}
+<div class="alert alert-danger">
 <p>Please login to see this page.</p>
+</div>
 {% endif %} {% endif %}
-
+<img src="https://darynodes.in/assets/img/logo.png" height=128 width=128 />
 <form method="post" action="{% url 'login' %}">
   {% csrf_token %}
-  <table>
-    <tr>
-      <td>{{ form.username.label_tag }}</td>
-      <td>{{ form.username }}</td>
-    </tr>
-    <tr>
-      <td>{{ form.password.label_tag }}</td>
-      <td>{{ form.password }}</td>
-    </tr>
-  </table>
-  <input type="submit" value="login" />
+  <p>{{ form.username.label_tag }}<br>
+  {{ form.username }}</p>
+  <p>{{ form.password.label_tag }}<br>
+  {{ form.password }}</p>
+  <button class="btn btn-primary" type="submit">Login</button>
+  <!-- <input type="submit" value="login" class="btn btn-primary" /> -->
   <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
 {# Assumes you setup the password_reset view in your URLconf #}
 <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+
+{% endblock %}
