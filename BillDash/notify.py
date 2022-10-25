@@ -96,16 +96,47 @@ def delete_server(server):
 
 
 def bill_paid(bill):
-    embed = DiscordEmbed(
-        title=f"Bill marked paid for {str(bill.server.customer)}",
-        description=f"Amount: {bill.amount} {bill.currency}",
-        color=0x00FF00,
-    )
+    try:
+        embed = DiscordEmbed(
+            title=f"Bill marked paid for {str(bill.server.customer)}",
+            description=f"Amount: {bill.amount} {bill.currency}",
+            color=0x00FF00,
+        )
+    except:
+        embed = DiscordEmbed(
+            title=f"Bill marked paid for {str(bill.server)}",
+            description=f"Amount: {bill.amount} {bill.currency}",
+            color=0x00FF00,
+        )
     embed.add_embed_field(name="Bill Number", value=str(bill.bill_number))
     embed.add_embed_field(name="Server", value=str(bill.server))
     embed.add_embed_field(
         name="Due date", value=f"<t:{int(bill.due_date.timestamp())}>"
     )
     embed.add_embed_field(name="Amount", value=f"{bill.amount} {bill.currency}")
+    webhook = DiscordWebhook(url=webhook_url, embeds=[embed])
+    webhook.execute()
+
+
+def bill_delete(bill):
+    try:
+        embed = DiscordEmbed(
+            title=f"Bill deleted for {str(bill.server.customer)}",
+            description=f"Amount: {bill.amount} {bill.currency}",
+            color=0xFF0000,
+        )
+    except:
+        embed = DiscordEmbed(
+            title=f"Bill deleted for {str(bill.server)}",
+            description=f"Amount: {bill.amount} {bill.currency}",
+            color=0x00FF00,
+        )
+    embed.add_embed_field(name="Bill Number", value=str(bill.bill_number))
+    embed.add_embed_field(name="Server", value=str(bill.server))
+    embed.add_embed_field(
+        name="Due date", value=f"<t:{int(bill.due_date.timestamp())}>"
+    )
+    embed.add_embed_field(name="Amount", value=f"{bill.amount} {bill.currency}")
+    embed.add_embed_field(name="Paid", value=str(bill.paid))
     webhook = DiscordWebhook(url=webhook_url, embeds=[embed])
     webhook.execute()

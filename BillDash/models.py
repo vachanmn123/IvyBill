@@ -43,7 +43,6 @@ class Customer(models.Model):
         return super().save(*args)
 
     def delete(self, *args):
-        print("Deleting customer")
         if pterodactyl.delete_user(self.ptero_id):
             return super().delete(*args)
         return print("Error deleting customer")
@@ -67,6 +66,9 @@ class Bill(models.Model):
     def save(self, *args) -> None:
         if (not self._state.adding) and self.paid:
             self.server.next_payment_date += timezone.timedelta(days=30)
+            if self.server.suspended:
+                self.server.suspended = False
+                self.server.save()
             notify.bill_paid(self)
             return super().save(*args)
         if self.amount > 0:
@@ -75,6 +77,10 @@ class Bill(models.Model):
         self.amount = self.server.plan.price
         notify.new_bill(self)
         return super().save(*args)
+    
+    def delete(self, *args):
+        notify.bill_delete(self)
+        return super().delete(*args)
 
 
 class Location(models.Model):
