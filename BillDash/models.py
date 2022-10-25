@@ -67,6 +67,7 @@ class Bill(models.Model):
     def save(self, *args) -> None:
         if (not self._state.adding) and self.paid:
             self.server.next_payment_date += timezone.timedelta(days=30)
+            notify.bill_paid(self)
             return super().save(*args)
         if self.amount > 0:
             notify.new_bill(self)

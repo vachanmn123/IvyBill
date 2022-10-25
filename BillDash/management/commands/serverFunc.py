@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 bill.save()
         # Suspend the servers.
         for server in Server.objects.all():
-            if server.next_payment_date <= timezone.now():
+            if server.next_payment_date <= timezone.now() and not server.suspended:
                 pterodactyl.suspend_server(server.server_id)
                 server.suspended = True
                 server.save()
