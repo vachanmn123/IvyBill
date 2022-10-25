@@ -59,7 +59,10 @@ class Bill(models.Model):
     paid = models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return f"{self.server.customer} - {self.due_date.isoformat()}"
+        try:
+            return f"{self.server.customer} - {self.due_date.isoformat()}"
+        except:
+            return f"{self.server} - {self.due_date.isoformat()}"
 
     def save(self, *args) -> None:
         if (not self._state.adding) and self.paid:
